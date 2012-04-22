@@ -1,0 +1,2 @@
+tcomment.vba: call delete('/home/curt/.vim/doc/tcomment.txt')|call delete('/home/curt/.vim/plugin/tcomment.vim')|call delete('/home/curt/.vim/autoload/tcomment.vim')
+DrawIt.vba: call delete('/home/curt/.vim/plugin/DrawItPlugin.vim')|call delete('/home/curt/.vim/plugin/cecutil.vim')|call delete('/home/curt/.vim/autoload/DrawIt.vim')|call delete('/home/curt/.vim/doc/DrawIt.txt')
