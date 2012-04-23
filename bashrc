@@ -39,50 +39,16 @@ dropbox=/home/curt/Dropbox/Public
 
 
 ###### PUBLIC VARS
-export HTTP_PROXY='http://proxy.uswestgw.xerox.com:8000'
-export http_proxy='http://proxy.uswestgw.xerox.com:8000'
-
-export FTP_PROXY='ftp://proxy.uswestgw.xerox.com:8000'
-export ftp_proxy='ftp://proxy.uswestgw.xerox.com:8000'
 
 export WEB_PROJECTS='/var/www/sv/projects'
 
 ################## SECTION:SHELL VARIABLES  ######################################################
 
 ######################### SECTION:FUNCTIONS #######################################################
-##func tn (last octet of IP)
-tn() {
-	telnet 13.253.25.$1;
-}
-##func mklab ( IP address to use mklab on)
-mklab() {
-	asprint -P$1 /mustang/projects/engbook/software/tools/makeLabMachine-on.dlm;
-}
 
 ##func cmfu (commandlinefu search)
 cmfu(){ curl "http://www.commandlinefu.com/commands/matching/$@/$(echo -n $@ | openssl base64)/plaintext"; }
 
-##func shmnt (last 3 chars of IP)
-shmnt() {
-
-	if [ -z "$1" ]
-	then 
-		return
-	fi
-	if [ ! -d "/mfp/qacave$1" ] 
-	then
-		echo -e "\n/mfp/qacave$1 doesn't exist so attempting to create"	
-		sudo mkdir "/mfp/qacave$1"
-		sudo chown curt:curt "/mfp/qacave$1"
-		sudo chmod 755 "/mfp/qacave$1"
-	fi
-
-	sshfs "root@13.253.25.$1:/" "/mfp/qacave$1"
-}
-##func shumnt (folder to unmount sshfs from under /mfp/qacave)
-shumnt() {
-	fusermount -u "/mfp/qacave$1"
-}
 ##func info (file to look in, info to search, grep options)
 info() {
 	if [ -z $1 ]; then
@@ -103,45 +69,6 @@ addinfo(){
 	fi
 	echo "$2" >> ~/info/$1 # append to the info file
 }
-##func findtest(regex to find test)
-findtest(){
-	if [ -z $1 ]; then
-		return 
-	fi
-	
-	find $TESTDIR $ACCUREV_MIRROR -iname "$1"
-
-}
-##func hold( item to hold )
-hold(){
-	if [ -z $1 ]; then
-		return 
-	fi
-	mv $1 /mh/3_onhold
-}
-##func archive(item to archive)
-archive(){
-	if [ -z $1 ]; then
-		return
-	fi
-	
-	mv $1 /mh/4_archive
-}
-##func addtestfile( testfile to add)
-addtestfile (){
-	if [ -z $1 ]; then
-		return 	
-	fi
-	mv $1 /mh/testfiles
-}
-##func addsnippet(snippet to add)
-addsnippet(){
-	if [ -z $1 ]; then
-		return 	
-	fi
-
-	mv $1 /mh/snippets
-}
 ##func func(grep regex)
 func(){
 	if [ -z $1 ]; then
@@ -156,14 +83,6 @@ func(){
 sed1(){ 
 	grep "#.*$1.*" ~/info/sed1 
 }
-##func searchTestResults(string to search for)
-searchTestResults(){
-	if [ -z $1 ]; then 
-		return
-	fi
-
-	find -L $TEST_RESULTS -iname "$1"
-}
 ##func drop ([file to copy to dropbox]) ### without params ls $dropbox
 drop(){
 	if [ -z $1 ]; then
@@ -175,10 +94,6 @@ drop(){
 ##func greplist(search string) ### list files containing search string                                    
 greplist() {                                                                                              
    grep -il "$1"                                                                                          
-}                                                                                                         
-##func share(file to share) ### share the file on /share/tmp                                              
-share() {                                                                                                 
-   cp "$1" /share                                                                                         
 }                                                                                                         
                                                                                                           
 ##func display_stack, aliased to ds ### Display the stack of directories and prompt                       
@@ -216,12 +131,6 @@ function push_dir_to_stack(){
   dirs -v
 }
 alias cds=push_dir_to_stack
-##func copy_test_results (file, path_relative_test_results) ### copy test results to test results folder
-function copy_test_results() {
-	# copy results to test results
-	cp $1 "/mustang/projects/solqa/tests/Mamba/Test Results"/$2
-}
-alias cpres=copy_test_results
 ##func droplink(dropbox resource from public folder, path_of_link) ### make a link to something from the dropbox public folder for syncing settings, like bash or vim settings
 function droplink(){
 	rm -rf "$2"
@@ -312,3 +221,6 @@ function before_prompt() {
 
 PROMPT_COMMAND=before_prompt
 alias a2host='ssh seewebde@a2s69.a2hosting.com -p 7822'
+
+# always cd to home
+cd $HOME
